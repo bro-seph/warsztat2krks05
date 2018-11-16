@@ -13,7 +13,9 @@ public class Main {
 
         try {
             Connection conn = DbUtils.getConnection();
-            System.out.println("działa!" + conn.hashCode());
+            User u = new User("Ala", "ala@mail.pl", "ala");
+            u.saveToDB(conn);
+            System.out.println("id: " + u.getId());
             conn.close();
 
         } catch (SQLException e) {
