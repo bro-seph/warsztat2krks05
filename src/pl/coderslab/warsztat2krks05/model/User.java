@@ -19,6 +19,10 @@ public class User {
         setPassword(password); // ustawiono wywołanie metody (nie możemy przechowywać niezaszyfrowanego hasła
     }
 
+    public User() {
+
+    }
+
     public int getId() {
         return id;
     }
@@ -51,6 +55,16 @@ public class User {
         this.password = BCrypt.hashpw(password, BCrypt.gensalt());
     }
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                '}';
+    }
+
     // nie statyczna bo ma korzystać z obecnego stanu obiektu
     public void saveToDB(Connection conn)
             throws SQLException {
@@ -79,5 +93,26 @@ public class User {
             throw new SQLException("Not implemented!");
         }
 
+    }
+
+    public static User loadUserbyId(Connection conn, int id) throws SQLException {
+        final String sql = "SELECT id, username, email, password " +
+                "FROM users WHERE id= ?;";
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setInt(1, id);
+        ResultSet rs = ps.executeQuery();// execute Query zwraca resultset
+        if (rs.next()) {
+            User u = new User(); //dałem alt enter i create constructor (zrobić bezparametrowy)
+            u.id = rs.getInt("id");
+            u.username = rs.getString("username");
+            u.email = rs.getString("email");
+            u.password = rs.getString("password");
+
+            return u;
+        }
+        rs.close();
+        ps.close();
+
+        return null; //jak wyjdziemy nie mamy nic do zwrócenia
     }
 }

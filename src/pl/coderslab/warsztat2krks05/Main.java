@@ -13,9 +13,8 @@ public class Main {
 
         try {
             Connection conn = DbUtils.getConnection();
-            User u = new User("Ala", "ala@mail.pl", "ala");
-            u.saveToDB(conn);
-            System.out.println("id: " + u.getId());
+            User u = User.loadUserbyId(conn, 1); //pobranie użytkownika
+            System.out.println((u.toString())); //zrobiona metoda
             conn.close();
 
         } catch (SQLException e) {
